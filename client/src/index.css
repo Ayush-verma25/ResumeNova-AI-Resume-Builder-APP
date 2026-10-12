@@ -10,4 +10,23 @@
   button {
     cursor: pointer;
   }
+  input:not([type="checkbox"]) {
+    outline: none;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+  }
+  input:not([type="checkbox"]):focus {
+    border-color: #f97316;
+    box-shadow: 0 0 0 1px #f97316;
+  }
+  textarea {
+    outline: none;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    resize: none;
+  }
+  textarea:focus {
+    border-color: #f97316;
+    box-shadow: 0 0 0 1px #f97316;
+  }
 }
