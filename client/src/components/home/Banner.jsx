@@ -5,7 +5,7 @@ const Banner = () => {
         <p>
           <span className="px-3 py-1 rounded-lg text-white bg-orange-600 mr-2">
             New
-          </span>
+          </span>{" "}
           ResumeNova is here! Create your own AI-generated resumes with ease.
         </p>
       </div>
