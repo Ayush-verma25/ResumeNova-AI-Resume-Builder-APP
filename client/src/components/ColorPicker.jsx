@@ -11,6 +11,12 @@ const ColorPicker = ({ selectedColor, onChange }) => {
     { name: "Burgundy", color: "#9F1239" },
     { name: "Charcoal", color: "#374151" },
     { name: "Brown", color: "#7C2D12" },
+    { name: "Red", color: "#E53E3E" },
+    { name: "Orange", color: "#FB6340" },
+    { name: "Yellow", color: "#F59E0B" },
+    { name: "Green", color: "#06B6D4" },
+    { name: "Cyan", color: "#06989A" },
+    { name: "Purple", color: "#9333EA" },
   ];
 
   const [isOpen, setIsOpen] = useState(false);
