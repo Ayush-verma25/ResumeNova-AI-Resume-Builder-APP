@@ -1,6 +1,17 @@
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
+const getSafeExternalUrl = (value) => {
+	try {
+		const url = new URL(value);
+		return url.protocol === "http:" || url.protocol === "https:" ? url.href : null;
+	} catch {
+		return null;
+	}
+};
+
 const ModernTemplate = ({ data, accentColor }) => {
+	const linkedinUrl = getSafeExternalUrl(data.personal_info?.linkedin);
+	const websiteUrl = getSafeExternalUrl(data.personal_info?.website);
 	const formatDate = (dateStr) => {
 		if (!dateStr) return "";
 		const [year, month] = dateStr.split("-");
@@ -38,16 +49,30 @@ const ModernTemplate = ({ data, accentColor }) => {
 						</div>
 					)}
 					{data.personal_info?.linkedin && (
-						<a target="_blank" href={data.personal_info?.linkedin} className="flex items-center gap-2">
-							<Link className="size-4" />
-							<span className="break-all text-xs">{data.personal_info.linkedin.split("https://www.")[1] ? data.personal_info.linkedin.split("https://www.")[1] : data.personal_info.linkedin}</span>
-						</a>
+						linkedinUrl ? (
+							<a target="_blank" rel="noopener noreferrer" href={linkedinUrl} className="flex items-center gap-2">
+								<Link className="size-4" />
+								<span className="break-all text-xs">{data.personal_info.linkedin.split("https://www.")[1] ? data.personal_info.linkedin.split("https://www.")[1] : data.personal_info.linkedin}</span>
+							</a>
+						) : (
+							<div className="flex items-center gap-2">
+								<Link className="size-4" />
+								<span className="break-all text-xs">{data.personal_info.linkedin}</span>
+							</div>
+						)
 					)}
 					{data.personal_info?.website && (
-						<a target="_blank" href={data.personal_info?.website} className="flex items-center gap-2">
-							<Globe className="size-4" />
-							<span className="break-all text-xs">{data.personal_info.website.split("https://")[1] ? data.personal_info.website.split("https://")[1] : data.personal_info.website}</span>
-						</a>
+						websiteUrl ? (
+							<a target="_blank" rel="noopener noreferrer" href={websiteUrl} className="flex items-center gap-2">
+								<Globe className="size-4" />
+								<span className="break-all text-xs">{data.personal_info.website.split("https://")[1] ? data.personal_info.website.split("https://")[1] : data.personal_info.website}</span>
+							</a>
+						) : (
+							<div className="flex items-center gap-2">
+								<Globe className="size-4" />
+								<span className="break-all text-xs">{data.personal_info.website}</span>
+							</div>
+						)
 					)}
 				</div>
 			</header>

@@ -1,25 +1,64 @@
+import { lazy, Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Layout from "./pages/Layout";
-import Dashboard from "./pages/Dashboard";
-import ResumeBuilder from "./pages/ResumeBuilder";
-import Preview from "./pages/Preview";
-import Login from "./pages/Login";
+import { useDispatch } from "react-redux";
+import api from "./configs/api";
+import { login, logout, setLoading } from "./app/features/authSlice";
+import { Toaster } from "react-hot-toast";
+import Loader from "./components/Loader";
+
+const Home = lazy(() => import("./pages/Home"));
+const Layout = lazy(() => import("./pages/Layout"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const ResumeBuilder = lazy(() => import("./pages/ResumeBuilder"));
+const Preview = lazy(() => import("./pages/Preview"));
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        if (token) {
+          const { data } = await api.get("/api/users/data", {
+            headers: { Authorization: token },
+          });
+          if (data.user) {
+            dispatch(login({ token, user: data.user }));
+          } else {
+            dispatch(logout());
+          }
+          dispatch(setLoading(false));
+        } else {
+          dispatch(setLoading(false));
+        }
+      } catch (error) {
+        if (error.response?.status === 401) {
+          dispatch(logout());
+        }
+        dispatch(setLoading(false));
+        console.log(error.message);
+      }
+    };
+
+    getUserData();
+  }, [dispatch]);
+
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Home />} />
+      <Toaster />
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
 
-        <Route path="app" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="builder/:resumeId" element={<ResumeBuilder />} />
-        </Route>
+          <Route path="app" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="builder/:resumeId" element={<ResumeBuilder />} />
+          </Route>
 
-        <Route path="view/:resumeId" element={<Preview />} />
-        <Route path="login" element={<Login />} />
-      </Routes>
+          <Route path="view/:resumeId" element={<Preview />} />
+        </Routes>
+      </Suspense>
     </>
   );
 };
